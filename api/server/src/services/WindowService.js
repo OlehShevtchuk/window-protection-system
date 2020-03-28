@@ -16,14 +16,9 @@ class WindowService {
   }
 
   static async updateWindow(id, updateWindow) {
-    const windowToUpdate = await database.Window.findOne({
+    return database.Window.update(updateWindow, {
       where: { id: Number(id) },
     });
-    if (windowToUpdate) {
-      await database.Window.update(updateWindow, { where: { id: Number(id) } });
-      return updateWindow;
-    }
-    return null;
   }
 
   static async getAWindow(id) {

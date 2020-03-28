@@ -27,16 +27,16 @@ class WindowController {
     }
     const newWindow = request.body;
     const newWindowWithDefaultData = {
-        ...newWindow,
-        status: get(newWindow, 'status', 'ok'), 
-        accidentDate: get(newWindow, 'accidentDate', null),
-    }
+      ...newWindow,
+      status: get(newWindow, 'status', 'ok'),
+      accidentDate: get(newWindow, 'accidentDate', null),
+    };
     try {
       const windowWithSameName = await WindowService.getWindowInZoneByName(
         newWindowWithDefaultData.name,
         newWindowWithDefaultData.ZoneId,
       );
-      if(windowWithSameName) {
+      if (windowWithSameName) {
         util.setError(
           400,
           `In this zone window with name ${newWindowWithDefaultData.name} alredy exist`,
@@ -44,7 +44,9 @@ class WindowController {
         return util.send(response);
       }
 
-      const createdWindow = await WindowService.addWindow(newWindowWithDefaultData);
+      const createdWindow = await WindowService.addWindow(
+        newWindowWithDefaultData,
+      );
       util.setSuccess(201, 'Window Added!', createdWindow);
       return util.send(response);
     } catch (error) {
@@ -61,12 +63,30 @@ class WindowController {
       return util.send(response);
     }
     try {
-      const updateWindow = await WindowService.updateWindow(id, alteredWindow);
-      if (!updateWindow) {
+      const windowToUpdate = await WindowService.getAWindow(id);
+      if (!windowToUpdate) {
         util.setError(404, `Cannot find window with the id: ${id}`);
-      } else {
-        util.setSuccess(200, 'Window updated', updateWindow);
       }
+      
+      if (
+        get(alteredWindow, 'name') &&
+        windowToUpdate.name !== alteredWindow.name
+      ) {
+        const windowWithSameName = await WindowService.getWindowInZoneByName(
+          alteredWindow.name,
+          windowToUpdate.ZoneId,
+        );
+        if (windowWithSameName) {
+          util.setError(
+            400,
+            `In this zone window with name ${windowWithSameName.name} alredy exist`,
+          );
+          return util.send(response);
+        }
+      }
+
+      await WindowService.updateWindow(id, alteredWindow);
+      util.setSuccess(200, 'Window updated', alteredWindow);
       return util.send(response);
     } catch (error) {
       util.setError(404, error);
