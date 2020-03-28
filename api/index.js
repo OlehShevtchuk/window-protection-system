@@ -3,6 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import windowRoutes from './server/src/routes/WindowRoutes';
 import zoneRoutes from './server/src/routes/ZoneRoutes';
+import sensorRoutes from './server/src/routes/SensorRoutes';
 
 config.config();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const port = process.env.PORT || 8000;
 app.use('/api/window', windowRoutes);
 app.use('/api/zone', zoneRoutes);
+app.use('/api/sensor', sensorRoutes);
 
 // when a random route is inputed
 app.get('*', (request, response) =>

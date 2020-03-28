@@ -37,7 +37,6 @@ class ZoneController {
 
   static async updatedZone(request, response) {
     const alteredZone = request.body;
-    console.log(alteredZone);
     const { id } = request.params;
     if (!Number(id)) {
       util.setError(400, 'Please input a valid numeric value');
