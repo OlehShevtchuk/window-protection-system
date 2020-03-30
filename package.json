@@ -9,7 +9,8 @@
   },
   "scripts": {
     "dev": "nodemon --exec babel-node ./api/index.js",
-    "start": "--exec babel-node ./api/index.js",
+    "build": "rm -rf dist && babel ./api --out-dir dist",
+    "start": "npm run build && node ./dist/index.js",
     "fix": "eslint . --fix",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,16 +28,16 @@
     "pg": "~7.18.2",
     "pg-hstore": "~2.3.3",
     "sequelize": "~5.21.5",
-    "sequelize-cli": "^5.5.1"
-  },
-  "devDependencies": {
+    "sequelize-cli": "~5.5.1",
     "@babel/cli": "~7.8.4",
+    "@babel/preset-env": "^7.8.7",
     "@babel/core": "~7.8.7",
     "@babel/node": "~7.8.7",
     "@babel/plugin-transform-runtime": "~7.8.3",
-    "@babel/preset-env": "~7.8.7",
     "@babel/register": "~7.8.6",
-    "@babel/runtime": "~7.8.7",
+    "@babel/runtime": "~7.8.7"
+  },
+  "devDependencies": {
     "babel-eslint": "~10.1.0",
     "babel-loader": "~8.0.6",
     "chai": "~4.2.0",
