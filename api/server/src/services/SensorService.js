@@ -2,10 +2,21 @@ import database from '../models';
 
 class SensorService {
   static getAllSensors() {
-    return database.Sensor.findAll();
+    return database.Sensor.findAll({
+      raw: true,
+      include: {
+        model: database.Window,
+        attributes: ['name'],
+        include: {
+          model: database.Zone,
+          attributes: ['name'],
+        },
+      },
+    });
   }
 
   static addSensor(newSensor) {
+    console.info(newSensor)
     return database.Sensor.create(newSensor);
   }
 
@@ -28,6 +39,21 @@ class SensorService {
     });
 
     return theSensor;
+  }
+
+  static async getACompleteSensorInfo(id) {
+    return database.Sensor.findOne({
+      raw: true,
+      where: { id: Number(id) },
+      include: {
+        model: database.Window,
+        attributes: ['name'],
+        include: {
+          model: database.Zone,
+          attributes: ['name'],
+        },
+      },
+    });
   }
 
   static async deleteSensor(id) {

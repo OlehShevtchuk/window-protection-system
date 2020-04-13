@@ -28,7 +28,7 @@ class WindowController {
     const newWindow = request.body;
     const newWindowWithDefaultData = {
       ...newWindow,
-      status: get(newWindow, 'status', 'ok'),
+      status: get(newWindow, 'status', 'closed'),
       accidentDate: get(newWindow, 'accidentDate', null),
     };
     try {

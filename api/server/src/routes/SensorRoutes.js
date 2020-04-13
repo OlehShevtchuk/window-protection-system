@@ -8,6 +8,8 @@ router
   .get(SensorCoonroller.getAllSensors)
   .post(SensorCoonroller.addSensor);
 
+router.route('/complete/:id').get(SensorCoonroller.getACompleteSensorInfo);
+
 router
   .route('/:id')
   .get(SensorCoonroller.getASensor)

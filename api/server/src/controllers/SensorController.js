@@ -1,5 +1,27 @@
+import includes from 'lodash/includes';
+import keys from 'lodash/keys';
+import clone from 'lodash/clone';
+import map from 'lodash/map';
 import SensorService from '../services/SensorService';
 import Util from '../utils/Utils';
+
+const rename = (object, key, newKey) => {
+  if (includes(keys(object), key)) {
+    object[newKey] = clone(object[key]);
+
+    delete object[key];
+  }
+
+  return object;
+};
+
+const renameSensorKeys = sensor => {
+  let objectToRename = { ...sensor };
+  objectToRename = rename(sensor, 'Window.name', 'WindowName');
+  objectToRename = rename(sensor, 'Window.Zone.id', 'ZoneId');
+  objectToRename = rename(sensor, 'Window.Zone.name', 'ZoneName');
+  return objectToRename;
+};
 
 const util = new Util();
 
@@ -8,7 +30,10 @@ class SensorController {
     try {
       const allSensors = await SensorService.getAllSensors();
       if (allSensors.length > 0) {
-        util.setSuccess(200, 'Sensors retrieved', allSensors);
+        const renamedAllSensors = map(allSensors, sensor => {
+          return renameSensorKeys(sensor);
+        });
+        util.setSuccess(200, 'Sensors retrieved', renamedAllSensors);
       } else {
         util.setSuccess(200, 'No sensor found');
       }
@@ -30,7 +55,7 @@ class SensorController {
       util.setError(400, 'Please provide complete details');
       return util.send(response);
     }
-    const newZone = request.body;
+    const newSensor = request.body;
     // this data will be obtained from a method that attempts to connect to the sensor
     const dataFromSensor = {
       isOpen: false,
@@ -39,11 +64,14 @@ class SensorController {
       batteryCharge: 100,
     };
     const newSensorWithSensorData = {
-      ...newZone,
+      ...newSensor,
       ...dataFromSensor,
     };
+    console.info('new Request')
     try {
-      const createdSensor = await SensorService.addSensor(newSensorWithSensorData);
+      const createdSensor = await SensorService.addSensor(
+        newSensorWithSensorData,
+      );
       util.setSuccess(201, 'Sensor Added!', createdSensor);
       return util.send(response);
     } catch (error) {
@@ -59,6 +87,7 @@ class SensorController {
       util.setError(400, 'Please input a valid numeric value');
       return util.send(response);
     }
+    console.log(alteredSensor);
     try {
       const updateSensor = await SensorService.updateSensor(id, alteredSensor);
       if (!updateSensor) {
@@ -88,6 +117,28 @@ class SensorController {
         util.setError(404, `Cannot find sensor with the id ${id}`);
       } else {
         util.setSuccess(200, 'Found Sensor', theSensor);
+      }
+      return util.send(response);
+    } catch (error) {
+      util.setError(404, error);
+      return util.send(response);
+    }
+  }
+
+  static async getACompleteSensorInfo(request, response) {
+    const { id } = request.params;
+
+    if (!Number(id)) {
+      util.setError(400, 'Please input a valid numeric value');
+      return util.send(response);
+    }
+
+    try {
+      const theSensor = await SensorService.getACompleteSensorInfo(id);
+      if (!theSensor) {
+        util.setError(404, `Cannot find sensor with the id ${id}`);
+      } else {
+        util.setSuccess(200, 'Found Sensor', renameSensorKeys(theSensor));
       }
       return util.send(response);
     } catch (error) {
