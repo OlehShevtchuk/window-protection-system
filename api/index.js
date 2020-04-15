@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import windowRoutes from './server/src/routes/WindowRoutes';
 import zoneRoutes from './server/src/routes/ZoneRoutes';
 import sensorRoutes from './server/src/routes/SensorRoutes';
+import modeRoutes from './server/src/routes/ModeRoutes';
 import errorHandler from './server/src/helpers/errorHandler';
 import auth from './server/src/helpers/auth';
 
@@ -32,6 +33,7 @@ app.use(auth);
 app.use('/api/window', windowRoutes);
 app.use('/api/zone', zoneRoutes);
 app.use('/api/sensor', sensorRoutes);
+app.use('/api/mode', modeRoutes);
 
 // when a random route is inputed
 app.get('*', (request, response) =>
