@@ -13,6 +13,6 @@ router
 router
   .route('/:id')
   .get(ModeCoonroller.getAMode)
-  .put(ModeCoonroller.updatedModeStatus)
+  .put(ModeCoonroller.updatedModeStatus);
 
 export default router;

@@ -9,6 +9,8 @@ import windowRoutes from './server/src/routes/WindowRoutes';
 import zoneRoutes from './server/src/routes/ZoneRoutes';
 import sensorRoutes from './server/src/routes/SensorRoutes';
 import modeRoutes from './server/src/routes/ModeRoutes';
+import issueRoutes from './server/src/routes/IssueRoutes';
+
 import errorHandler from './server/src/helpers/errorHandler';
 import auth from './server/src/helpers/auth';
 
@@ -34,6 +36,7 @@ app.use('/api/window', windowRoutes);
 app.use('/api/zone', zoneRoutes);
 app.use('/api/sensor', sensorRoutes);
 app.use('/api/mode', modeRoutes);
+app.use('/api/issue', issueRoutes);
 
 // when a random route is inputed
 app.get('*', (request, response) =>
