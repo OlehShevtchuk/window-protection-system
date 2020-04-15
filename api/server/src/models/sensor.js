@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Sensor.associate = models => {
     Sensor.belongsTo(models.Window);
+    Sensor.hasMany(models.Issue);
   };
   return Sensor;
 };
