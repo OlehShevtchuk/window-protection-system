@@ -11,21 +11,19 @@ class IssueService {
 
   static async addIssue(parameters) {
     // params - params from sensor
-    const { sensorId, sensorType, isOpen, isActive, isBroken } = parameters;
+    const {
+      sensorDatabaseId,
+      sensorType,
+      isOpen,
+      isActive,
+      isBroken,
+    } = parameters;
+    console.info(parameters);
 
-    const sersorDatabaseData = await database.Sensor.findOne({
-      where: { sensorId: Number(sensorId) },
-    });
-
-    if (!sersorDatabaseData) return null;
-
-    const sensorDatabaseId = get(sersorDatabaseData, 'id');
     const completeSersorData = await SensorService.getACompleteSensorInfo(
       sensorDatabaseId,
     );
-
-    // const isSystemArmed = database.Mode.findOne({ where: { isActive: true } });
-    // if (!isSystemArmed) return null;
+    if (!get(completeSersorData, 'id')) return null;
     const windowDatabaseType = get(completeSersorData, 'type');
     if (windowDatabaseType !== sensorType) return null;
     const windowDatabaseName = get(completeSersorData, 'Window.name');
@@ -36,8 +34,8 @@ class IssueService {
     let issueText;
     let isSilence;
     if (sensorType === 'open/close') {
-      // Window is opened
-      if (isOpen) {
+      // Window is opened and sensor active
+      if (isOpen && isActive) {
         issueText = `BURGLARY ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Opened`;
         isSilence = false;
         await SensorService.updateSensor(sensorDatabaseId, {
@@ -75,7 +73,7 @@ class IssueService {
     }
     if (sensorType === 'glass break') {
       // Window is broken
-      if (isBroken) {
+      if (isBroken && isActive) {
         issueText = `BREAK ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Broken`;
         isSilence = false;
         await SensorService.updateSensor(sensorDatabaseId, {
@@ -115,7 +113,7 @@ class IssueService {
 
     if (!issueText) return null;
 
-    // checking is exist same issue in same sensorId
+    // checking is exist same issue in same sensor
 
     const issueDublicate = await database.Issue.findAll({
       where: {
@@ -123,13 +121,14 @@ class IssueService {
         SensorId: sensorDatabaseId,
       },
     });
+    console.info(issueText);
     if (issueDublicate.length > 0) return null;
-
     const newIssue = await database.Issue.create({
       issueText,
       isSilence,
       SensorId: sensorDatabaseId,
     });
+    console.info('added new issue');
     return newIssue;
   }
 

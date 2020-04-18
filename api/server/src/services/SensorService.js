@@ -15,8 +15,15 @@ class SensorService {
     });
   }
 
+  static getAllOkStatusSensorsIds() {
+    return database.Sensor.findAll({
+      attributes: ['id'],
+      where: { isActive: true, isOpen: false, status: 'ok' },
+    });
+  }
+
   static addSensor(newSensor) {
-    console.info(newSensor)
+    console.info(newSensor);
     return database.Sensor.create(newSensor);
   }
 

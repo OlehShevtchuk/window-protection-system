@@ -1,9 +1,21 @@
+import reject from 'lodash/reject';
+// import map from 'lodash/map';
+import forEach from 'lodash/forEach';
 import IssueService from '../services/IssueService';
 import Util from '../utils/Utils';
 
 const util = new Util();
 
-class IssueControler {
+let openConnections = [];
+
+export const getOpenConnections = () => {
+  if (openConnections.length === 0) {
+    return null;
+  }
+  return new Array(...openConnections);
+};
+
+export class IssueController {
   static async getAllIssues(request, response) {
     try {
       const allIssues = await IssueService.getAllIssues();
@@ -20,10 +32,10 @@ class IssueControler {
   }
 
   static async addIssue(request, response) {
-    const { sensorId, sensorType } = request.body;
+    const { sensorDatabaseId, sensorType } = request.body;
     console.log(request.body);
     if (
-      !sensorId ||
+      !sensorDatabaseId ||
       !sensorType ||
       (!('isActive' in request.body) &&
         (!('isOpen' in request.body) || !('isBroken' in request.body)))
@@ -91,4 +103,53 @@ class IssueControler {
   }
 }
 
-export default IssueControler;
+export async function eventsSse(request, response) {
+  console.info('-----------------------');
+  console.info('NewUser');
+  const headers = {
+    'Content-Type': 'text/event-stream',
+    Connection: 'keep-alive',
+    'Cache-Control': 'no-cache',
+  };
+  response.writeHead(200, headers);
+  response.write('\n');
+
+  // const intervalId = setInterval(() => {
+  //   response.write(`data: keep connection alive\n\n`);
+  // }, 60 * 1000);
+
+  // try {
+  //   const allIssues = await IssueService.getAllIssues();
+  //   if (allIssues.length > 0) {
+  //     response.write(
+  //       `event: issueOccured\ndata: ${JSON.stringify(allIssues)}\n\n`,
+  //     );
+  //   }
+  // } catch (error) {
+  //   console.info(error);
+  // }
+  // response.write(`event: issueOccured\ndata:[]\n\n`);
+
+  const clientId = Date.now();
+  const newClient = {
+    id: clientId,
+    response,
+  };
+  // console.info(newClient)
+  openConnections.push(newClient);
+  console.info(`New client added, qty: ${openConnections.length}`);
+  // When client closes connection we update the openConnections list
+  // avoiding the disconnected one
+  return response.on('close', () => {
+    console.log(`${clientId} Connection closed`);
+    openConnections = reject(openConnections, c => c.id !== clientId);
+  });
+}
+
+setInterval(() => {
+  forEach(openConnections, async user => {
+    await user.response.write(
+      `event: konnection\ndata: keep connection alive\n\n`,
+    );
+  });
+}, 60 * 1000);

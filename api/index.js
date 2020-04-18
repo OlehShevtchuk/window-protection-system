@@ -14,6 +14,8 @@ import issueRoutes from './server/src/routes/IssueRoutes';
 import errorHandler from './server/src/helpers/errorHandler';
 import auth from './server/src/helpers/auth';
 
+import startCrons from './server/src/helpers/cron';
+
 config.config();
 
 const app = express();
@@ -48,6 +50,7 @@ app.get('*', (request, response) =>
 app.use(errorHandler);
 
 app.listen(port, () => {
+  startCrons();
   console.log(`Server is running on PORT ${port}`);
 });
 
