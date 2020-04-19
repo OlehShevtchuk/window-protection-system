@@ -15,10 +15,10 @@ class SensorService {
     });
   }
 
-  static getAllOkStatusSensorsIds() {
+  static getAllActiveSensorsIds() {
     return database.Sensor.findAll({
       attributes: ['id'],
-      where: { isActive: true, isOpen: false, status: 'ok' },
+      where: { isActive: true },
     });
   }
 

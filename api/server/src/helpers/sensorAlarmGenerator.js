@@ -13,7 +13,7 @@ export default async function sensorAlarmGenerator() {
     console.info(get(mode, 'dataValues'));
     // if system disarmed or no sensors do nothing
     if (!get(mode, 'dataValues.isActive')) return null;
-    const sensorIds = await SensorService.getAllOkStatusSensorsIds();
+    const sensorIds = await SensorService.getAllActiveSensorsIds();
     if (get(sensorIds, 'length') === 0) {
       console.info('no sensors');
       return null;
