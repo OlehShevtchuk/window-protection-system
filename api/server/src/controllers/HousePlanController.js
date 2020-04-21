@@ -51,14 +51,15 @@ class HousePlanController {
       if (!created && previousKey) {
         await AwsService.deleteFile(previousKey);
       }
-      util.setSuccess(201, 'Plan Changed!', { record, created });
+
+      util.setSuccess(201, 'Plan Changed!', { url: get(record, 'url') });
       return util.send(response);
     } catch (error) {
       util.setError(400, error.message);
       return util.send(response);
     } finally {
       try {
-        fs.unlink(housePlan.tempFilePath);
+        if (housePlan) fs.unlink(get(housePlan, 'tempFilePath'));
       } catch (error) {
         console.info(error);
       }
