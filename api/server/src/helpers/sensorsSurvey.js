@@ -4,8 +4,10 @@ import get from 'lodash/get';
 import ModeService from '../services/ModeService';
 import SensorService from '../services/SensorService';
 import IssueService from '../services/IssueService';
+import PushNotificationService from '../services/PushNotificationService';
 import { MAIN_MODE_ID } from '../constants';
 import { getOpenConnections } from '../controllers/IssueController';
+import sendPushNotification from '../utils/SendPushNotification';
 
 // from 1 to 0
 const PERCENT_OF_INACTIVE_CASE = 0.1;
@@ -34,14 +36,25 @@ export default async function survaySensors() {
     const mode = get(await ModeService.getAMode(MAIN_MODE_ID), 'dataValues');
     // if system disarmed or no sensors do nothing
     if (get(sensors, 'length') === 0 || !mode.isActive) return null;
+    const recivers = await PushNotificationService.getAllSubscription();
     forEach(sensors, async sensor => {
       const generatedSensorData = randomizeSensorValue(sensor);
       const genBatteryCharge = get(generatedSensorData, 'batteryCharge');
       const isOpen = get(generatedSensorData, 'isOpen');
       const isBroken = get(generatedSensorData, 'isBroken');
 
+      let isDiffOpenCloseSensorState = false;
+      if (sensor.type === 'open/close') {
+        isDiffOpenCloseSensorState = isOpen !== sensor.isOpen;
+      }
+
       // if successefylly connect with sensor and sensor does`t detect alarm
-      if (genBatteryCharge && !isBroken && !isOpen && sensor.status === 'ok') {
+      if (
+        genBatteryCharge &&
+        !isBroken &&
+        !isDiffOpenCloseSensorState &&
+        sensor.status !== 'alarm'
+      ) {
         let message = sensor.msg;
         let status = sensor.status;
         if (genBatteryCharge < 10) {
@@ -77,6 +90,35 @@ export default async function survaySensors() {
               );
             });
           }
+          const issuePayload = {
+            title: 'Alarm!!!',
+            text: get(createdIssue, 'issueText'),
+            tag: 'alarm',
+            icon: 'windows-protection-alert.png',
+            badge: 'windows-protection-house-badge.png',
+            timestamp: Date.now(),
+            actions: [
+              {
+                action: 'Detail',
+                title: 'View',
+              },
+            ],
+            url: '/windows-protection',
+          };
+          forEach(recivers, async reciver => {
+            try {
+              await sendPushNotification(
+                {
+                  endpoint: reciver.endpoint,
+                  p256dh: reciver.p256dh,
+                  auth: reciver.auth,
+                },
+                issuePayload,
+              );
+            } catch (error) {
+              console.info(error);
+            }
+          });
         }
       }
     });

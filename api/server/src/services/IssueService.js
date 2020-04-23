@@ -65,7 +65,7 @@ class IssueService {
       }
       // Sensor is not active but was in Alarm status
       if (!issueText && sensorDatabaseStatus === 'alarm' && !isActive) {
-        issueText = `BURGLARY ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Opened. But now connection with this sensor lost`;
+        issueText = `BURGLARY ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}). But now connection with this sensor lost`;
         isSilence = true;
         windowStatus = 'inactive';
         await SensorService.updateSensor(sensorDatabaseId, {

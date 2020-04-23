@@ -1,5 +1,4 @@
 import reject from 'lodash/reject';
-// import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import IssueService from '../services/IssueService';
 import Util from '../utils/Utils';
@@ -114,22 +113,6 @@ export async function eventsSse(request, response) {
   response.writeHead(200, headers);
   response.write('\n');
 
-  // const intervalId = setInterval(() => {
-  //   response.write(`data: keep connection alive\n\n`);
-  // }, 60 * 1000);
-
-  // try {
-  //   const allIssues = await IssueService.getAllIssues();
-  //   if (allIssues.length > 0) {
-  //     response.write(
-  //       `event: issueOccured\ndata: ${JSON.stringify(allIssues)}\n\n`,
-  //     );
-  //   }
-  // } catch (error) {
-  //   console.info(error);
-  // }
-  // response.write(`event: issueOccured\ndata:[]\n\n`);
-
   const clientId = Date.now();
   const newClient = {
     id: clientId,
@@ -147,6 +130,7 @@ export async function eventsSse(request, response) {
 }
 
 setInterval(() => {
+  console.info(openConnections.length);
   forEach(openConnections, async user => {
     await user.response.write(
       `event: konnection\ndata: keep connection alive\n\n`,

@@ -12,6 +12,7 @@ import sensorRoutes from './server/src/routes/SensorRoutes';
 import modeRoutes from './server/src/routes/ModeRoutes';
 import issueRoutes from './server/src/routes/IssueRoutes';
 import housePlanRoutes from './server/src/routes/HousePlanRoutes';
+import pushNotificationRoutes from './server/src/routes/PushNotificationRoutes';
 
 import errorHandler from './server/src/helpers/errorHandler';
 import auth from './server/src/helpers/auth';
@@ -49,6 +50,7 @@ app.use('/api/sensor', sensorRoutes);
 app.use('/api/mode', modeRoutes);
 app.use('/api/issue', issueRoutes);
 app.use('/api/house-plan', housePlanRoutes);
+app.use('/api/push-notification', pushNotificationRoutes);
 
 // when a random route is inputed
 app.get('*', (request, response) =>
