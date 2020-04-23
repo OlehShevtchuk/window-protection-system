@@ -13,6 +13,7 @@
 //       process.env.VAPID_PUBLIC_KEY,
 //   };
 // }
+
 let privateKey = 'HmRMwYhniW5G5TPDObebOpQkv1UyNEIv1MNLCBF0tKI';
 let publicKey =
   'BDX-BCj5PFLEqjxJgfQUAw3ONmp2hhwpTOU80Zh7pgfg7djdzeOFwWEfPjaF3Iy9xShB2b_TwjGf5ECMKlnMZ14';
@@ -21,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
   publicKey = process.env.VAPID_PUBLIC_KEY;
 }
 
-module.exports = {
+export default {
   privateKey,
   publicKey,
 };
