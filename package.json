@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": ">=12.15.0",
-    "npm": ">=6.13.7"
+    "node": "~12.15.0",
+    "npm": "~6.13.7"
   },
   "scripts": {
     "dev": "nodemon --exec babel-node ./api/index.js",
