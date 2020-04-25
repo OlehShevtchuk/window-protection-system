@@ -19,17 +19,27 @@ class HousePlanController {
       util.setSuccess(201, 'Plan retrieved!', { planUrl });
       return util.send(response);
     } catch (error) {
-      util.setError(400, error.message);
+      util.setError(500, error.message);
       return util.send(response);
     }
   }
 
   static async upload(request, response) {
     const housePlan = get(request, 'files.housePlan');
+
     try {
       // if there is no housePlan
       if (!housePlan) {
         util.setError(400, 'No file uploaded');
+        return util.send(response);
+      }
+      const fileType = get(housePlan, 'mimetype');
+      if (
+        fileType !== 'image/jpeg' &&
+        fileType !== 'image/png' &&
+        fileType !== 'image/jpg'
+      ) {
+        util.setError(400, 'Wrong file extension');
         return util.send(response);
       }
       const fileData = await fs.readFile(housePlan.tempFilePath);
@@ -55,7 +65,7 @@ class HousePlanController {
       util.setSuccess(201, 'Plan Changed!', { url: get(record, 'url') });
       return util.send(response);
     } catch (error) {
-      util.setError(400, error.message);
+      util.setError(500, error.message);
       return util.send(response);
     } finally {
       try {

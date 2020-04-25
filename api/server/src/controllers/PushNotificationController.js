@@ -3,7 +3,6 @@ import forEach from 'lodash/forEach';
 import keys from '../config/keys';
 import Util from '../utils/Utils';
 import PushNotificationService from '../services/PushNotificationService';
-import sendPushNotification from '../utils/SendPushNotification';
 
 const util = new Util();
 
@@ -32,11 +31,14 @@ class PushNotificationController {
         actions: [],
         url: null,
       };
-      await sendPushNotification({ endpoint, p256dh, auth }, subscribePayload);
+      await PushNotificationService.sendPushNotification(
+        { endpoint, p256dh, auth },
+        subscribePayload,
+      );
       util.setSuccess(201, 'Subcibed succesfully', createdSubscription);
       return util.send(response);
     } catch (error) {
-      util.setError(400, error.message);
+      util.setError(500, error.message);
       return util.send(response);
     }
   }
@@ -61,7 +63,7 @@ class PushNotificationController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(400, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -72,7 +74,7 @@ class PushNotificationController {
       util.setSuccess(200, 'Key retrived!', { pushServerPublicKey });
       util.send(response);
     } else {
-      util.setError(400, 'no key!');
+      util.setError(500, 'no key!');
       util.send(response);
     }
   }
@@ -91,7 +93,7 @@ class PushNotificationController {
     const recivers = await PushNotificationService.getAllSubscription();
     forEach(recivers, async reciver => {
       try {
-        await sendPushNotification(
+        await PushNotificationService.sendPushNotification(
           {
             endpoint: reciver.endpoint,
             p256dh: reciver.p256dh,

@@ -9,10 +9,9 @@ class HousePlanService {
   }
 
   static async getAPlan(id) {
-    const thePlan = await database.HousePlan.findOne({
+    return  database.HousePlan.findOne({
       where: { id: Number(id) },
     });
-    return thePlan;
   }
 }
 

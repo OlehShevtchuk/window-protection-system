@@ -1,6 +1,9 @@
+import get from 'lodash/get';
 import ModeService from '../services/ModeService';
+import NotableEventService from '../services/NotableEventService';
 import Util from '../utils/Utils';
 import { MAIN_MODE_ID } from '../constants';
+import { hub } from '../helpers/sseHub';
 
 const util = new Util();
 
@@ -16,7 +19,7 @@ class ModeController {
       util.setSuccess(201, 'Mode Added!', createdMode);
       return util.send(response);
     } catch (error) {
-      util.setError(400, error.message);
+      util.setError(500, error.message);
       return util.send(response);
     }
   }
@@ -37,15 +40,22 @@ class ModeController {
       } else {
         let message;
         if (isArmed) {
-          message = 'Mode Armed';
+          message = 'Security system Armed';
         } else {
-          message = 'Mode Disarmed';
+          message = 'Security system Disarmed';
         }
+        await NotableEventService.addEvent({
+          eventText: `${message} by ${get(response, 'locals.user.userName')}`,
+          eventSource: 'user',
+          UserId: get(response, 'locals.user.id'),
+        });
         util.setSuccess(200, message, updateMode);
       }
-      return util.send(response);
+      await util.send(response);
+      const event = hub.event('systemStatusChanged', isArmed);
+      return event;
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -68,7 +78,7 @@ class ModeController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -84,7 +94,7 @@ class ModeController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -100,18 +110,25 @@ class ModeController {
       } else {
         let message;
         if (isArmed) {
-          message = 'Mode Armed';
+          message = 'Security system Armed';
         } else {
-          message = 'Mode Disarmed';
+          message = 'Security system Disarmed';
         }
+        await NotableEventService.addEvent({
+          eventText: `${message} by ${get(response, 'locals.user.userName')}`,
+          eventSource: 'user',
+          UserId: get(response, 'locals.user.id'),
+        });
         util.setSuccess(200, message, updateMode);
       }
-      return util.send(response);
+      await util.send(response);
+      const event = hub.event('systemStatusChanged', isArmed);
+      return event;
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
+  }
 }
-};
 
 export default ModeController;

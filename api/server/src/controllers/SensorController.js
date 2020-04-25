@@ -39,7 +39,7 @@ class SensorController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(400, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -75,7 +75,7 @@ class SensorController {
       util.setSuccess(201, 'Sensor Added!', createdSensor);
       return util.send(response);
     } catch (error) {
-      util.setError(400, error.message);
+      util.setError(500, error.message);
       return util.send(response);
     }
   }
@@ -97,7 +97,7 @@ class SensorController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -120,7 +120,7 @@ class SensorController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -142,7 +142,7 @@ class SensorController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -165,7 +165,7 @@ class SensorController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(400, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }

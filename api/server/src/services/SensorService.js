@@ -41,11 +41,9 @@ class SensorService {
   }
 
   static async getASensor(id) {
-    const theSensor = await database.Sensor.findOne({
+    return database.Sensor.findOne({
       where: { id: Number(id) },
     });
-
-    return theSensor;
   }
 
   static async getACompleteSensorInfo(id) {
@@ -64,17 +62,21 @@ class SensorService {
   }
 
   static async deleteSensor(id) {
-    const sensorToDelete = await database.Sensor.findOne({
-      where: { id: Number(id) },
-    });
-
-    if (sensorToDelete) {
-      const deletedSensor = await database.Sensor.destroy({
+    try {
+      const sensorToDelete = await database.Sensor.findOne({
         where: { id: Number(id) },
       });
-      return deletedSensor;
+
+      if (sensorToDelete) {
+        const deletedSensor = await database.Sensor.destroy({
+          where: { id: Number(id) },
+        });
+        return deletedSensor;
+      }
+      return null;
+    } catch (error) {
+      return error;
     }
-    return null;
   }
 }
 

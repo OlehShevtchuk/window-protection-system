@@ -10,38 +10,44 @@ class ZoneService {
   }
 
   static async updateZone(id, updateZone) {
-    const zoneToUpdate = await database.Zone.findOne({
-      where: { id: Number(id) },
-    });
+    try {
+      const zoneToUpdate = await database.Zone.findOne({
+        where: { id: Number(id) },
+      });
 
-    if (zoneToUpdate) {
-      await database.Zone.update(updateZone, { where: { id: Number(id) } });
+      if (zoneToUpdate) {
+        await database.Zone.update(updateZone, { where: { id: Number(id) } });
 
-      return updateZone;
+        return updateZone;
+      }
+      return null;
+    } catch (error) {
+      return error;
     }
-    return null;
   }
 
   static async getAZone(id) {
-    const theZone = await database.Zone.findOne({
+    return database.Zone.findOne({
       where: { id: Number(id) },
     });
-
-    return theZone;
   }
 
   static async deleteZone(id) {
-    const zoneToDelete = await database.Zone.findOne({
-      where: { id: Number(id) },
-    });
-
-    if (zoneToDelete) {
-      const deletedZone = await database.Zone.destroy({
+    try {
+      const zoneToDelete = await database.Zone.findOne({
         where: { id: Number(id) },
       });
-      return deletedZone;
+
+      if (zoneToDelete) {
+        const deletedZone = await database.Zone.destroy({
+          where: { id: Number(id) },
+        });
+        return deletedZone;
+      }
+      return null;
+    } catch (error) {
+      return error;
     }
-    return null;
   }
 }
 

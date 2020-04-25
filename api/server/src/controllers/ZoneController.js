@@ -14,7 +14,7 @@ class ZoneController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(400, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -30,7 +30,7 @@ class ZoneController {
       util.setSuccess(201, 'Zone Added!', createdZone);
       return util.send(response);
     } catch (error) {
-      util.setError(400, error.message);
+      util.setError(500, error.message);
       return util.send(response);
     }
   }
@@ -51,7 +51,7 @@ class ZoneController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -74,7 +74,7 @@ class ZoneController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(404, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
@@ -97,7 +97,7 @@ class ZoneController {
       }
       return util.send(response);
     } catch (error) {
-      util.setError(400, error);
+      util.setError(500, error);
       return util.send(response);
     }
   }
