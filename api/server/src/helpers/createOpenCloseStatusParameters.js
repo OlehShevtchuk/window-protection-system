@@ -17,7 +17,7 @@ export default function createOpenCloseStatusParameters(completeSersorData) {
   
   // Window is opened and sensor active and sensor in db closed
   if (isOpen && isActive && !sensorDatabaseIsOpen) {
-    issueText = `BURGLARY ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Opened`;
+    issueText = `BURGLARY ALARM (${windowDatabaseName} in Zone ${zoneDatabaseName} - Opened)`;
     isSilence = false;
     windowStatus = 'hacked';
     sensorStatus = 'alarm';
@@ -26,7 +26,7 @@ export default function createOpenCloseStatusParameters(completeSersorData) {
 
   // Event(Window closed) existing  data in database (sensor active and sensor in db open)
   if (!isOpen && isActive && sensorDatabaseIsOpen) {
-    issueText = `BURGLARY ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Closed`;
+    issueText = `BURGLARY ALARM (${windowDatabaseName} in Zone ${zoneDatabaseName} - Closed)`;
     isSilence = false;
     windowStatus = 'hacked';
     sensorStatus = 'alarm';
@@ -35,7 +35,7 @@ export default function createOpenCloseStatusParameters(completeSersorData) {
 
   // Sensor is not active but was in Alarm status
   if (!issueText && sensorDatabaseStatus === 'alarm' && !isActive) {
-    issueText = `BURGLARY ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}). But now connection with this sensor lost`;
+    issueText = `BURGLARY ALARM (${windowDatabaseName} in Zone ${zoneDatabaseName}, but now connection with this sensor lost)`;
     isSilence = true;
     windowStatus = 'inactive';
     sensorStatus = 'inactive';
@@ -49,7 +49,7 @@ export default function createOpenCloseStatusParameters(completeSersorData) {
     !isActive &&
     sensorDatabaseIsActive
   ) {
-    issueText = `Open/close sensor on ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Inactive, connection with this sensor lost`;
+    issueText = `WARNING(Open/close sensor on ${windowDatabaseName} in Zone ${zoneDatabaseName} - Inactive, connection with this sensor lost)`;
     isSilence = true;
     windowStatus = 'inactive';
     sensorStatus = 'inactive';

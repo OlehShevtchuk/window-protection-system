@@ -45,7 +45,7 @@ class ModeController {
           message = 'Security system Disarmed';
         }
         await NotableEventService.addEvent({
-          eventText: `${message} by ${get(response, 'locals.user.userName')}`,
+          eventText: `${message}`,
           eventSource: 'user',
           UserId: get(response, 'locals.user.id'),
         });
@@ -115,7 +115,7 @@ class ModeController {
           message = 'Security system Disarmed';
         }
         await NotableEventService.addEvent({
-          eventText: `${message} by ${get(response, 'locals.user.userName')}`,
+          eventText: `${message}`,
           eventSource: 'user',
           UserId: get(response, 'locals.user.id'),
         });

@@ -143,7 +143,7 @@ class IssueService {
         const notableEventText = `${get(
           issueToUpdate,
           'dataValues.issueText',
-        )} is set to silence by ${get(user, 'userName')}`;
+        )} is set to silence`;
 
         await NotableEventService.addEvent({
           eventText: notableEventText,
@@ -211,10 +211,7 @@ class IssueService {
 
         // add clear issue event to NotableEvents table
         await NotableEventService.addEvent({
-          eventText: `${get(
-            issueToDelete,
-            'dataValues.issueText',
-          )} cleared by ${get(user, 'userName')}`,
+          eventText: `${get(issueToDelete, 'dataValues.issueText')}, cleared`,
           eventSource: 'user',
           UserId: get(user, 'id'),
         });

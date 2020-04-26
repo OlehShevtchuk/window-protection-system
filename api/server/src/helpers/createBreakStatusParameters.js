@@ -16,7 +16,7 @@ export default function createOpenCloseStatusParameters(completeSersorData) {
 
   // Window is broken
   if (isBroken && isActive) {
-    issueText = `BREAK ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Broken`;
+    issueText = `BREAK ALARM (${windowDatabaseName} in Zone ${zoneDatabaseName} - Broken)`;
     isSilence = false;
     windowStatus = 'broken';
     sensorStatus = 'alarm';
@@ -24,7 +24,7 @@ export default function createOpenCloseStatusParameters(completeSersorData) {
   }
   // Sensor is not active but was in Alarm status
   if (!issueText && sensorDatabaseStatus === 'alarm' && !isActive) {
-    issueText = `BREAK ALARM ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Broken. But now connection with this sensor lost`;
+    issueText = `BREAK ALARM (${windowDatabaseName} in Zone ${zoneDatabaseName} - Broken. But now connection with this sensor lost)`;
     isSilence = true;
     windowStatus = 'inactive';
     sensorStatus = 'inactive';
@@ -38,7 +38,7 @@ export default function createOpenCloseStatusParameters(completeSersorData) {
     !isActive &&
     sensorDatabaseIsActive
   ) {
-    issueText = `Break sensor on ${windowDatabaseName} (Zone ${zoneDatabaseName}) - Inactive, connection with this sensor lost`;
+    issueText = `WARNING(Break sensor on ${windowDatabaseName} in Zone ${zoneDatabaseName} - Inactive, connection with this sensor lost)`;
     isSilence = true;
     windowStatus = 'inactive';
     sensorStatus = 'inactive';

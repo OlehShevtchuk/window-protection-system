@@ -1,17 +1,21 @@
 import database from '../models';
+import { hub } from '../helpers/sseHub';
 
 class NotableEventService {
-  static getEvents(limit) {
+  static getEvents(limit, page) {
     return database.NotableEvent.findAndCountAll({
       limit,
-      order: [['updatedAt', 'DESC']],
+      offset: (page - 1) * limit,
+      order: [['createdAt', 'DESC']],
+      raw: true,
     });
   }
 
-  static addEvent(event) {
-    return database.NotableEvent.create(event);
+  static async addEvent(event) {
+    const createdEvent = await database.NotableEvent.create(event);
+    hub.event('eventOccured', createdEvent.dataValues);
+    return createdEvent;
   }
-
 }
 
 export default NotableEventService;

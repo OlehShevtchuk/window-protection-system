@@ -4,7 +4,7 @@ import { AUTH_URL } from '../constants';
 
 export default async function auth(request, response, next) {
   const authorizationToken = request.header('Authorization');
-  const responseFromAuthService = await fetch(AUTH_URL, {
+  const responseFromAuthService = await fetch(`${AUTH_URL}/verifying/user`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: authorizationToken,

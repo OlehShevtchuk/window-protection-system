@@ -104,5 +104,11 @@ export class IssueController {
 }
 
 export async function eventsSse(request, response) {
+  console.info('----------------------------------');
+  console.info(hub.clients);
   response.sse.event('welcome', "Welcome! You'll now receive realtime events");
+  console.info('----------------------------------');
+  console.info('----------------------------------');
+  console.info('----------------------------------');
+  console.info(hub.clients);
 }
