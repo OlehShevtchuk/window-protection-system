@@ -25,7 +25,7 @@ class PushNotificationController {
       );
       const subscribePayload = {
         title: 'Congratulations!',
-        text: 'You succesfully subscribe to receving push notifications!',
+        text: 'You successfully subscribe to receving push notifications!',
         tag: 'subscribed',
         badge: 'windows-protection-house-badge.png',
         actions: [],
@@ -35,7 +35,7 @@ class PushNotificationController {
         { endpoint, p256dh, auth },
         subscribePayload,
       );
-      util.setSuccess(201, 'Subcibed succesfully', createdSubscription);
+      util.setSuccess(201, 'Subcibed successfully', createdSubscription);
       return util.send(response);
     } catch (error) {
       util.setError(500, error.message);

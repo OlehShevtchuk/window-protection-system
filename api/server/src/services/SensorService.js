@@ -23,7 +23,6 @@ class SensorService {
   }
 
   static addSensor(newSensor) {
-    console.info(newSensor);
     return database.Sensor.create(newSensor);
   }
 

@@ -1,3 +1,4 @@
+import sequelize from 'sequelize';
 import database from '../models';
 import { hub } from '../helpers/sseHub';
 
@@ -15,6 +16,17 @@ class NotableEventService {
     const createdEvent = await database.NotableEvent.create(event);
     hub.event('eventOccured', createdEvent.dataValues);
     return createdEvent;
+  }
+
+  static async deleteOlder30DaysEvents() {
+    try {
+      await sequelize.query(
+        "DELETE FROM NotableEvents WHERE timestamp < NOW() - INTERVAL '30 days'",
+      );
+      return true;
+    } catch (error) {
+      return null;
+    }
   }
 }
 

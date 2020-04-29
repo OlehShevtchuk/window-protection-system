@@ -4,6 +4,7 @@ import SensorService from '../services/SensorService';
 import IssueService from '../services/IssueService';
 import ModeService from '../services/ModeService';
 import PushNotificationService from '../services/PushNotificationService';
+import sendAlarmToChat from './sendAlarmToChat';
 import { MAIN_MODE_ID } from '../constants';
 import { hub } from './sseHub';
 
@@ -46,7 +47,11 @@ export default async function sensorAlarmGenerator() {
       hub.event('issueOccured', createdIssue);
 
       await PushNotificationService.sendAlarmToAllSubscription(createdIssue);
+      
+      // send alarm to chat
+      await sendAlarmToChat(createdIssue);
     }
+
     return true;
   } catch (error) {
     console.info(error);

@@ -71,7 +71,6 @@ export class IssueController {
       return hub.event('issueChanged', id);
     } catch (error) {
       util.setError(500, error);
-      console.info(error)
       return util.send(response);
     }
   }
@@ -96,7 +95,6 @@ export class IssueController {
       await util.send(response);
       return hub.event('issueChanged', id);
     } catch (error) {
-       console.info(error);
       util.setError(500, error);
       return util.send(response);
     }
@@ -104,11 +102,5 @@ export class IssueController {
 }
 
 export async function eventsSse(request, response) {
-  console.info('----------------------------------');
-  console.info(hub.clients);
   response.sse.event('welcome', "Welcome! You'll now receive realtime events");
-  console.info('----------------------------------');
-  console.info('----------------------------------');
-  console.info('----------------------------------');
-  console.info(hub.clients);
 }

@@ -5,6 +5,7 @@ import ModeService from '../services/ModeService';
 import SensorService from '../services/SensorService';
 import IssueService from '../services/IssueService';
 import PushNotificationService from '../services/PushNotificationService';
+import sendAlarmToChat from './sendAlarmToChat';
 import { MAIN_MODE_ID } from '../constants';
 import { hub } from './sseHub';
 
@@ -84,6 +85,9 @@ export default async function survaySensors() {
           await PushNotificationService.sendAlarmToAllSubscription(
             createdIssue,
           );
+
+          // send alarm to chat
+          await sendAlarmToChat(createdIssue);
         }
       }
     });

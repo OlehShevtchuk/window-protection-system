@@ -7,9 +7,7 @@ const util = new Util();
 
 class NotableEventCoontroller {
   static async getNotableEvents(request, response) {
-    console.info('----------');
     const authorizationToken = request.header('Authorization');
-    console.info(request.query);
     const page = parseInt(request.query.page, 10) || 1;
     const limit = parseInt(request.query.limit, 10) || 1;
 

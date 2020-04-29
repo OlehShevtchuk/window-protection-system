@@ -2,6 +2,7 @@ import get from 'lodash/get';
 import ModeService from '../services/ModeService';
 import NotableEventService from '../services/NotableEventService';
 import Util from '../utils/Utils';
+import sensorSurvey from '../helpers/sensorsSurvey';
 import { MAIN_MODE_ID } from '../constants';
 import { hub } from '../helpers/sseHub';
 
@@ -111,9 +112,11 @@ class ModeController {
         let message;
         if (isArmed) {
           message = 'Security system Armed';
+          await sensorSurvey();
         } else {
           message = 'Security system Disarmed';
         }
+
         await NotableEventService.addEvent({
           eventText: `${message}`,
           eventSource: 'user',

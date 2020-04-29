@@ -24,7 +24,7 @@ class IssueService {
       isActive = false,
       isBroken = false,
     } = parameters;
-    console.info(parameters);
+
     try {
       const completeSersorData = await SensorService.getACompleteSensorInfo(
         sensorDatabaseId,
@@ -91,14 +91,13 @@ class IssueService {
           SensorId: sensorDatabaseId,
         },
       });
-      console.info(issueText);
+
       if (issueDublicate.length > 0) return null;
       const newIssue = await database.Issue.create({
         issueText,
         isSilence,
         SensorId: sensorDatabaseId,
       });
-      console.info('added new issue');
 
       // update sensor data in db
       await SensorService.updateSensor(sensorDatabaseId, {
@@ -120,7 +119,6 @@ class IssueService {
         eventText: issueText,
         eventSource: ISSUE_EVENT_SOURCE,
       });
-      console.info('added new notable event');
 
       return newIssue;
     } catch (error) {
@@ -139,7 +137,7 @@ class IssueService {
           where: { id: Number(id) },
         });
 
-        // add silence event to NotableEvents table
+        // add silenced event to NotableEvents table
         const notableEventText = `${get(
           issueToUpdate,
           'dataValues.issueText',
@@ -150,7 +148,6 @@ class IssueService {
           eventSource: 'user',
           UserId: get(user, 'id'),
         });
-        console.info('added new notable event');
 
         return { updatedIssue, notableEventText };
       }
@@ -204,7 +201,6 @@ class IssueService {
             accidentDate: sequelize.literal('CURRENT_TIMESTAMP'),
           });
         }
-        console.info('added new notable event');
         const deletedIssue = await database.Issue.destroy({
           where: { id: Number(id) },
         });
