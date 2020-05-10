@@ -1,8 +1,6 @@
-# Eliftech PERN API Boilerplate
-
 ## Overview
 
-This is a boilerplate application for building REST APIs in Node.js using ES6 and Express. Intended for use with Postgres using Sequelize ORM.
+This is a back-end service for window protection system, builded in Node.js using ES6 and Express. Intended for use with Postgres using Sequelize ORM.
 
 ## Getting Started
 
